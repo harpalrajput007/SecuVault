@@ -20,6 +20,19 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/vault', vaultRoutes);
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'SecuVault API Server', 
+    status: 'Running',
+    endpoints: {
+      health: '/health',
+      auth: '/api/auth/*',
+      vault: '/api/vault/*'
+    }
+  });
+});
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
