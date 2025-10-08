@@ -2,10 +2,6 @@ import { Request } from 'express';
 
 export interface AuthRequest extends Request {
   userId?: string;
-  body: any;
-  query: any;
-  params: any;
-  cookies: any;
 }
 
 export interface VaultItem {
