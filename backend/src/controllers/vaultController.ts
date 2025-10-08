@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import VaultItem from '../models/VaultItem';
-import { AuthRequest } from '../types';
+import { AuthRequest } from '../middleware/auth';
 
 export const vaultValidation = [
   body('title').trim().isLength({ min: 1 }),

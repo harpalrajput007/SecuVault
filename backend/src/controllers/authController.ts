@@ -5,10 +5,7 @@ import { body, validationResult } from 'express-validator';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
 import User from '../models/User';
-
-interface AuthRequest extends Request {
-  userId?: string;
-}
+import { AuthRequest } from '../middleware/auth';
 
 export const registerValidation = [
   body('email').isEmail().normalizeEmail(),
