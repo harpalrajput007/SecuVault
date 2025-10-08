@@ -39,6 +39,8 @@ export default function VaultEntryModal({ entry, onSave, onClose }: VaultEntryMo
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('Form submitted with data:', formData)
+    
     const newErrors: {[key: string]: string} = {}
 
     if (!formData.title.trim()) newErrors.title = 'Title is required'
@@ -46,9 +48,13 @@ export default function VaultEntryModal({ entry, onSave, onClose }: VaultEntryMo
     if (!formData.password.trim()) newErrors.password = 'Password is required'
 
     setErrors(newErrors)
+    console.log('Validation errors:', newErrors)
 
     if (Object.keys(newErrors).length === 0) {
+      console.log('Validation passed, calling onSave')
       onSave(formData)
+    } else {
+      console.log('Validation failed')
     }
   }
 

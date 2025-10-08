@@ -9,6 +9,30 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// Add request interceptor for debugging
+api.interceptors.request.use(
+  (config) => {
+    console.log('API Request:', config.method?.toUpperCase(), config.url, config.data)
+    return config
+  },
+  (error) => {
+    console.error('API Request Error:', error)
+    return Promise.reject(error)
+  }
+)
+
+// Add response interceptor for debugging
+api.interceptors.response.use(
+  (response) => {
+    console.log('API Response:', response.status, response.data)
+    return response
+  },
+  (error) => {
+    console.error('API Response Error:', error.response?.status, error.response?.data)
+    return Promise.reject(error)
+  }
+)
+
 export const authAPI = {
   register: (email: string, password: string) => 
     api.post('/auth/register', { email, password }),

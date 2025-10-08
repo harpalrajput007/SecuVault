@@ -72,19 +72,27 @@ export default function Dashboard() {
 
   const handleSaveEntry = async (entry: Omit<VaultEntry, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
+      console.log('Saving entry:', entry)
+      console.log('User password available:', !!userPassword)
+      
       const encryptedEntry = ClientCrypto.encryptVaultItem(entry, userPassword!)
+      console.log('Entry encrypted successfully')
       
       if (editingEntry) {
+        console.log('Updating existing entry:', editingEntry.id)
         await vaultAPI.updateItem(editingEntry.id, encryptedEntry)
       } else {
+        console.log('Creating new entry')
         await vaultAPI.createItem(encryptedEntry)
       }
       
+      console.log('Entry saved successfully')
       await loadEntries(searchTerm)
       setShowModal(false)
       setEditingEntry(null)
     } catch (error) {
-      console.error('Failed to save entry')
+      console.error('Failed to save entry:', error)
+      alert('Failed to save entry. Please check the console for details.')
     }
   }
 
