@@ -1,16 +1,15 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthRequest } from '../types';
+
+interface AuthRequest extends Request {
+  userId?: string;
+}
 
 export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
-  let token = req.cookies.token;
+  let token = req.cookies?.token;
   
-  // Fallback to Authorization header if cookie not present
-  if (!token) {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      token = authHeader.substring(7);
-    }
+  if (!token && req.headers.authorization) {
+    token = req.headers.authorization.replace('Bearer ', '');
   }
 
   if (!token) {

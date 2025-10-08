@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_BASE = process.env.NODE_ENV === 'production' 
-  ? process.env.NEXT_PUBLIC_API_URL || 'https://your-backend-url.com/api'
+  ? process.env.NEXT_PUBLIC_API_URL || 'https://secuvault-backend.onrender.com/api'
   : 'http://localhost:5000/api';
 
 const api = axios.create({
@@ -9,29 +9,30 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Add request interceptor for debugging
-api.interceptors.request.use(
-  (config) => {
-    console.log('API Request:', config.method?.toUpperCase(), config.url, config.data)
-    return config
-  },
-  (error) => {
-    console.error('API Request Error:', error)
-    return Promise.reject(error)
+// Add token to requests if available
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-)
+  return config;
+});
 
-// Add response interceptor for debugging
+// Handle token from login response
 api.interceptors.response.use(
   (response) => {
-    console.log('API Response:', response.status, response.data)
-    return response
+    if (response.data.token) {
+      localStorage.setItem('token', response.data.token);
+    }
+    return response;
   },
   (error) => {
-    console.error('API Response Error:', error.response?.status, error.response?.data)
-    return Promise.reject(error)
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+    }
+    return Promise.reject(error);
   }
-)
+);
 
 export const authAPI = {
   register: (email: string, password: string) => 
@@ -40,7 +41,10 @@ export const authAPI = {
   login: (email: string, password: string, twoFactorCode?: string) => 
     api.post('/auth/login', { email, password, twoFactorCode }),
   
-  logout: () => api.post('/auth/logout'),
+  logout: () => {
+    localStorage.removeItem('token');
+    return api.post('/auth/logout');
+  },
   
   setup2FA: () => api.post('/auth/2fa/setup'),
   

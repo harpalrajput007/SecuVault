@@ -5,7 +5,10 @@ import { body, validationResult } from 'express-validator';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
 import User from '../models/User';
-import { AuthRequest } from '../types';
+
+interface AuthRequest extends Request {
+  userId?: string;
+}
 
 export const registerValidation = [
   body('email').isEmail().normalizeEmail(),
@@ -14,7 +17,6 @@ export const registerValidation = [
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log('Register request:', req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
@@ -46,7 +48,6 @@ export const loginValidation = [
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    console.log('Login request:', req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       res.status(400).json({ errors: errors.array() });
@@ -82,13 +83,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
     
+    // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
+    // Also return token for Authorization header
     res.json({ 
       message: 'Login successful', 
       user: { id: user._id, email: user.email },

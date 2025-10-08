@@ -1,9 +1,3 @@
-import { Request } from 'express';
-
-export interface AuthRequest extends Request {
-  userId?: string;
-}
-
 export interface VaultItem {
   _id?: string;
   title: string;
@@ -11,6 +5,8 @@ export interface VaultItem {
   password: string;
   url?: string;
   notes?: string;
+  category?: string;
+  isFavorite?: boolean;
   userId: string;
   createdAt?: Date;
   updatedAt?: Date;
