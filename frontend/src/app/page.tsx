@@ -120,7 +120,7 @@ export default function HomePage() {
                   Zero-Knowledge
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
-                  We can't see your passwords even if we wanted to. Your data is encrypted with your master password.
+                  We can&apos;t see your passwords even if we wanted to. Your data is encrypted with your master password.
                 </p>
               </div>
             </div>
@@ -166,7 +166,7 @@ export default function HomePage() {
                     Your Data, Your Control
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300">
-                    With client-side encryption, you're the only one who can decrypt your passwords. 
+                    With client-side encryption, you&apos;re the only one who can decrypt your passwords. 
                     Not even we can access your data.
                   </p>
                 </div>

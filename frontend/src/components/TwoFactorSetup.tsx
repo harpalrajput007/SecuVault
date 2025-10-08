@@ -137,7 +137,7 @@ export default function TwoFactorSetup({ onClose }: TwoFactorSetupProps) {
                   2FA Enabled Successfully!
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 text-sm">
-                  Your account is now protected with two-factor authentication. You'll need to enter a code from your authenticator app when signing in.
+                  Your account is now protected with two-factor authentication. You&apos;ll need to enter a code from your authenticator app when signing in.
                 </p>
               </div>
               <button
