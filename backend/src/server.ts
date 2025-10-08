@@ -16,13 +16,13 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://secuvault-frontend.onrender.com', /https:\/\/.*\.onrender\.com$/, 'http://localhost:3000']
+    ? ['https://secuvault-frontend.onrender.com', 'http://localhost:3000']
     : 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
   exposedHeaders: ['Set-Cookie']
-});
+}));
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 
