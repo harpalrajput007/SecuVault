@@ -5,18 +5,10 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './utils/database';
+import authRoutes from './routes/auth';
+import vaultRoutes from './routes/vault';
 
-let authRoutes: any;
-let vaultRoutes: any;
-
-try {
-  authRoutes = require('./routes/auth').default;
-  vaultRoutes = require('./routes/vault').default;
-  console.log('✅ Routes imported successfully');
-} catch (error) {
-  console.error('❌ Failed to import routes:', error);
-  process.exit(1);
-}
+console.log('✅ Routes imported successfully');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -46,13 +38,9 @@ app.get('/health', (req, res) => {
 });
 
 // Routes
-if (authRoutes && vaultRoutes) {
-  app.use('/api/auth', authRoutes);
-  app.use('/api/vault', vaultRoutes);
-  console.log('✅ Routes registered successfully');
-} else {
-  console.error('❌ Routes not available');
-}
+app.use('/api/auth', authRoutes);
+app.use('/api/vault', vaultRoutes);
+console.log('✅ Routes registered successfully');
 
 // Test endpoint
 app.get('/api/test', (req, res) => {
