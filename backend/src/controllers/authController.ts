@@ -89,7 +89,11 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    res.json({ message: 'Login successful', user: { id: user._id, email: user.email } });
+    res.json({ 
+      message: 'Login successful', 
+      user: { id: user._id, email: user.email },
+      token: token
+    });
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
