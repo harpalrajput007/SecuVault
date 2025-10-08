@@ -5,7 +5,6 @@ import { body, validationResult } from 'express-validator';
 import speakeasy from 'speakeasy';
 import QRCode from 'qrcode';
 import User from '../models/User';
-import { AuthRequest } from '../middleware/auth';
 
 export const registerValidation = [
   body('email').isEmail().normalizeEmail(),
@@ -80,7 +79,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '7d' });
     
-    // Set cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -88,7 +86,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    // Also return token for Authorization header
     res.json({ 
       message: 'Login successful', 
       user: { id: user._id, email: user.email },
@@ -104,7 +101,7 @@ export const logout = (req: Request, res: Response): void => {
   res.json({ message: 'Logged out successfully' });
 };
 
-export const setup2FA = async (req: AuthRequest, res: Response): Promise<void> => {
+export const setup2FA = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = await User.findById(req.userId);
     if (!user) {
@@ -131,7 +128,7 @@ export const setup2FA = async (req: AuthRequest, res: Response): Promise<void> =
   }
 };
 
-export const verify2FA = async (req: AuthRequest, res: Response): Promise<void> => {
+export const verify2FA = async (req: Request, res: Response): Promise<void> => {
   try {
     const { token } = req.body;
     const user = await User.findById(req.userId);

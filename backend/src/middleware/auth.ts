@@ -1,11 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-export interface AuthRequest extends Request {
-  userId?: string;
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: string;
+    }
+  }
 }
 
-export const authenticateToken = (req: AuthRequest, res: Response, next: NextFunction): void => {
+export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
   let token = req.cookies?.token;
   
   if (!token && req.headers.authorization) {

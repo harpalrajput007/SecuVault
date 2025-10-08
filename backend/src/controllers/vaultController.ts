@@ -1,7 +1,6 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import VaultItem from '../models/VaultItem';
-import { AuthRequest } from '../middleware/auth';
 
 export const vaultValidation = [
   body('title').trim().isLength({ min: 1 }),
@@ -9,7 +8,7 @@ export const vaultValidation = [
   body('password').isLength({ min: 1 })
 ];
 
-export const createVaultItem = async (req: AuthRequest, res: Response): Promise<void> => {
+export const createVaultItem = async (req: Request, res: Response): Promise<void> => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -37,7 +36,7 @@ export const createVaultItem = async (req: AuthRequest, res: Response): Promise<
   }
 };
 
-export const getVaultItems = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getVaultItems = async (req: Request, res: Response): Promise<void> => {
   try {
     const { search } = req.query;
     let query: any = { userId: req.userId };
@@ -56,7 +55,7 @@ export const getVaultItems = async (req: AuthRequest, res: Response): Promise<vo
   }
 };
 
-export const getVaultItem = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getVaultItem = async (req: Request, res: Response): Promise<void> => {
   try {
     const item = await VaultItem.findOne({ _id: req.params.id, userId: req.userId });
     
@@ -71,7 +70,7 @@ export const getVaultItem = async (req: AuthRequest, res: Response): Promise<voi
   }
 };
 
-export const updateVaultItem = async (req: AuthRequest, res: Response): Promise<void> => {
+export const updateVaultItem = async (req: Request, res: Response): Promise<void> => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -99,7 +98,7 @@ export const updateVaultItem = async (req: AuthRequest, res: Response): Promise<
   }
 };
 
-export const deleteVaultItem = async (req: AuthRequest, res: Response): Promise<void> => {
+export const deleteVaultItem = async (req: Request, res: Response): Promise<void> => {
   try {
     const item = await VaultItem.findOneAndDelete({ _id: req.params.id, userId: req.userId });
     
